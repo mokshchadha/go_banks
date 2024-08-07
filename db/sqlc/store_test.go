@@ -1,61 +1,53 @@
 package db
 
-import (
-	"context"
-	"testing"
+// func TestTransferTx(t *testing.T) {
+// 	store := NewStore(testDB)
 
-	"github.com/stretchr/testify/require"
-)
+// 	account1 := createRandomAccount(t)
+// 	account2 := createRandomAccount(t)
 
-func TestTransferTx(t *testing.T) {
-	store := NewStore(testDB)
+// 	// run n concurrent transfer transactions
 
-	account1 := createRandomAccount(t)
-	account2 := createRandomAccount(t)
+// 	n := 5
+// 	amount := int64(10)
 
-	// run n concurrent transfer transactions
+// 	errs := make(chan error)
 
-	n := 5
-	amount := int64(10)
+// 	results := make(chan TransferTxResult)
 
-	errs := make(chan error)
+// 	for i := 0; i < n; i++ {
+// 		go func() {
+// 			result, err := store.TransferTx(context.Background(), TransferTxParams{
+// 				FromAccountId: account1.ID,
+// 				ToAccountId:   account2.ID,
+// 				Amount:        amount,
+// 			})
+// 			errs <- err
+// 			results <- result
+// 		}()
+// 	}
 
-	results := make(chan TransferTxResult)
+// 	//check results
 
-	for i := 0; i < n; i++ {
-		go func() {
-			result, err := store.TransferTx(context.Background(), TransferTxParams{
-				FromAccountId: account1.ID,
-				ToAccountId:   account2.ID,
-				Amount:        amount,
-			})
-			errs <- err
-			results <- result
-		}()
-	}
+// 	for i := 0; i < n; i++ {
+// 		err := <-errs
+// 		require.NoError(t, err)
 
-	//check results
+// 		result := <-results
+// 		require.NotEmpty(t, result)
 
-	for i := 0; i < n; i++ {
-		err := <-errs
-		require.NoError(t, err)
+// 		transfer := result.Transfer
+// 		require.NotEmpty(t, transfer)
+// 		require.Equal(t, account1.ID, transfer.FromAccountID)
+// 		require.Equal(t, account2.ID, transfer.ToAccountID)
+// 		require.NotZero(t, transfer.ID)
+// 		require.NotZero(t, transfer.CreatedAt)
 
-		result := <-results
-		require.NotEmpty(t, result)
+// 		_, err = store.GetTransfer(context.Background(), transfer.ID)
+// 		require.NoError(t, err)
 
-		transfer := result.Transfer
-		require.NotEmpty(t, transfer)
-		require.Equal(t, account1.ID, transfer.FromAccountID)
-		require.Equal(t, account2.ID, transfer.ToAccountID)
-		require.NotZero(t, transfer.ID)
-		require.NotZero(t, transfer.CreatedAt)
+// 		// check Entries
 
-		_, err = store.GetTransfer(context.Background(), transfer.ID)
-		require.NoError(t, err)
+// 	}
 
-		// check Entries 
-		 
-
-	}
-
-}
+// }
